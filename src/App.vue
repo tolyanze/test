@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ListsUser/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ListsUser from './components/ListsUser.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ListsUser
   }
 }
 </script>
@@ -19,8 +18,11 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 60px auto;
+  max-width: 1200px;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
