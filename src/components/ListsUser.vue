@@ -47,12 +47,16 @@
       <p>Подразделение:</p>
     </div>
     <div class="d-60 flex-column">
-      <p>{{phone}}</p>
-      <p>{{email}}</p>
-      <p>{{hire_date}}</p>
-      <p>{{position_name}}</p>
-      <p>{{department}}</p>
+      <p class="opacity">{{phone}}</p>
+      <p class="opacity">{{email}}</p>
+      <p class="opacity">{{hire_date}}</p>
+      <p class="opacity">{{position_name}}</p>
+      <p class="opacity">{{department}}</p>
     </div>
+  </div>
+  <div class="footer">
+    <p>Дополнительная информация:</p>
+    <p class="opacity">Наше дело не так однозначно, как может показаться: существующая теория напрямую зависит от экспериментов, поражающих по своей масштабности и грандиозности. Не следует, однако, забывать, что выбранный нами инновационный путь создаёт предпосылки для прогресса профессионального сообщества. </p>
   </div>
   </el-dialog>
 </template>
@@ -88,26 +92,33 @@ export default {
       this.phone = userInfo.phone
       this.email = userInfo.email
       this.hire_date = userInfo.hire_date
-      this.position_name = userInfo.position_name.substr(0, 30)+"..."
-      this.department = userInfo.department.substr(0, 30)+"..."
+      if(window.innerWidth < 768){
+        this.position_name = userInfo.position_name.substr(0, 20)+"..."
+        this.department = userInfo.department.substr(0, 20)+"..."
+      }else{
+        this.position_name = userInfo.position_name.substr(0, 40)+"..."
+        this.department = userInfo.department.substr(0, 40)+"..."
+      }
+      
       this.dialogVisible = true
     },
-    filterName(arrname){
-      let comp = this.userName;
+    filterArrName(arrname){
+      let comp = this.userName.toLowerCase();
         Object.entries(arrname)
         return arrname.filter(elem => {
+          const nameLowelCase = elem.name.toLowerCase()
             if(comp==='') return true;
-            else return elem.name.indexOf(comp) > -1;
+            else return nameLowelCase.indexOf(comp) > -1;
         })
     }
   },
   computed:{
     filteredList(){
       if(this.serverError){
-        return this.filterName(this.info)
+        return this.filterArrName(this.info)
       }else{
         this.info = this.$store.state.user
-        return this.filterName(this.info);
+        return this.filterArrName(this.info);
       }
         
     }
@@ -120,7 +131,7 @@ export default {
         this.serverError = false
         return console.log('Ошибка соединения с сервером: '+error.message+'. Используем локальное хранилище Vuex')
       });
-  }
+  },
 }
 
 </script>
@@ -134,6 +145,10 @@ export default {
   display: block;
   border-radius: 20px;
   padding: 30px 10px;
+  width: 560px;
+  @media screen and (max-width: 600px){
+    width: 90%;
+  }
   .d-flex{
     display: flex;
     .flex-column{
@@ -146,10 +161,10 @@ export default {
     }
     .d-60{
       width: 60%;
-      p{
-        color:rgba(0, 0, 0, 0.4);
-      }
     }
+  }
+  .opacity{
+    color:rgba(0, 0, 0, 0.4);
   }
   .el-dialog__header {
     padding: var(--el-dialog-padding-primary);
@@ -175,6 +190,16 @@ export default {
       top: 2px;
     }
   }
+  .footer{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 20px;
+    .opacity{
+      text-align: start;
+      margin: 0;
+    }
+  }
 }
 .searсh{
   width: 98%;
@@ -189,7 +214,7 @@ export default {
     padding: 15px 10px;
     border-radius: 25px;
     outline: none;
-    border: 2px solid #cecece77;
+    border: 2px solid #cecece25;
     :active{
       outline: none;
       outline-offset: none;
