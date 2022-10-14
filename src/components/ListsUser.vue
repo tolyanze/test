@@ -59,11 +59,14 @@
 
 <script>
 import axios from 'axios'
+// import {state} from 'vuex'
+
 
 export default {
   name: 'ListsUser',
   data() {
     return {
+      serverError:true,
       userName:'',
       dialogVisible: false,
       info: [],
@@ -81,7 +84,6 @@ export default {
       this.dialogVisible = false
     },
     modalOpen(userInfo){
-      console.log(userInfo)
       this.name = userInfo.name
       this.phone = userInfo.phone
       this.email = userInfo.email
@@ -89,22 +91,35 @@ export default {
       this.position_name = userInfo.position_name.substr(0, 30)+"..."
       this.department = userInfo.department.substr(0, 30)+"..."
       this.dialogVisible = true
+    },
+    filterName(arrname){
+      let comp = this.userName;
+        Object.entries(arrname)
+        return arrname.filter(elem => {
+            if(comp==='') return true;
+            else return elem.name.indexOf(comp) > -1;
+        })
     }
   },
   computed:{
     filteredList(){
-        let comp = this.userName;
-        Object.entries(this.info)
-        return this.info.filter(elem => {
-            if(comp==='') return true;
-            else return elem.name.indexOf(comp) > -1;
-        })
+      if(this.serverError){
+        return this.filterName(this.info)
+      }else{
+        this.info = this.$store.state.user
+        return this.filterName(this.info);
+      }
+        
     }
   },
   created(){
     axios
       .get('http://127.0.0.1:3000')
       .then(response => (this.info = response.data))
+      .catch(error => {
+        this.serverError = false
+        return console.log('Ошибка соединения с сервером: '+error.message+'. Используем локальное хранилище Vuex')
+      });
   }
 }
 
@@ -194,7 +209,7 @@ export default {
   .icon-search{
     position: absolute;
     top:15%;
-    right: 2%;
+    right: 5px;
     font-size: 2rem;
     color:#d46ceed0;
     @media screen and (max-width: 480px) {

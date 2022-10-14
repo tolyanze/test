@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import store from './store'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import App from './App.vue'
@@ -11,4 +12,5 @@ library.add({faEnvelope, faMobileScreenButton, faMagnifyingGlass})
 createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
   .use(ElementPlus)
+  .use(store)
   .mount('#app')
